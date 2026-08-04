@@ -82,17 +82,22 @@ class DetailParser:
             )
 
             if email:
-                if EmailValidator.validate(email):
-                    result[email_key] = email
-                else:
-                    logger.warning(f"Post {post_id}: Malformed email: {email}")
-                    self.malformed_emails.append(email)
-                    self.malformed_email_count += 1
+                validate_email = self.config['validation'].get('validate_email', False)
 
-                    if self.malformed_email_count > self.config['validation'].get('malformed_email_threshold', 5):
-                        raise RuntimeError(
-                            f"Malformed email threshold exceeded: {self.malformed_email_count}"
-                        )
+                if validate_email:
+                    if EmailValidator.validate(email):
+                        result[email_key] = email
+                    else:
+                        logger.warning(f"Post {post_id}: Malformed email: {email}")
+                        self.malformed_emails.append(email)
+                        self.malformed_email_count += 1
+
+                        if self.malformed_email_count > self.config['validation'].get('malformed_email_threshold', 5):
+                            raise RuntimeError(
+                                f"Malformed email threshold exceeded: {self.malformed_email_count}"
+                            )
+                else:
+                    result[email_key] = email
 
             # Extract description from detail page
             description = self._extract_description(soup, post_id)
