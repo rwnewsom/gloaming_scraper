@@ -1,8 +1,10 @@
+"""HTTP client with TOR proxy support and exponential backoff retry logic."""
 import logging
 import time
 import json
 import random
 from typing import Dict, Any, Optional
+
 import requests
 
 logger = logging.getLogger(__name__)
@@ -45,7 +47,8 @@ class APIClient:
 
         for attempt in range(max_retries + 1):
             try:
-                logger.debug(f"API POST to {endpoint_path} (attempt {attempt + 1}/{max_retries + 1})")
+                logger.debug(
+                    f"API POST to {endpoint_path} (attempt {attempt + 1}/{max_retries + 1})")
 
                 response = self.session.post(
                     url,

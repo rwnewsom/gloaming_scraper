@@ -1,9 +1,10 @@
+"""Main orchestrator for web scraping pipeline."""
 import logging
 import re
 import sys
 import time
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Dict, Any
 from bs4 import BeautifulSoup
 
 from redacted.config_manager import ConfigManager
@@ -231,7 +232,8 @@ class WebScraper:
             )
 
             # Initialize exporter with dynamic filename and output directory
-            output_file = self.output_dir / f'scrape_results_{self.city_name}_{self.dynamic_cityid}_{time.strftime("%Y%m%d")}.csv'
+            output_file = self.output_dir / \
+                f'scrape_results_{self.city_name}_{self.dynamic_cityid}_{time.strftime("%Y%m%d")}.csv'
             self.csv_exporter = CSVExporter(
                 output_file=str(output_file),
                 config=self.config.validated_config
@@ -283,13 +285,15 @@ class WebScraper:
                 if self.config.get('development', 'dev_mode'):
                     max_pages = self.config.get('development', 'dev_mode_max_pages')
                     if page_count > max_pages:
-                        self.logger.info(f"Dev mode limit reached. Stopping after page {page_count - 1}")
+                        self.logger.info(
+                            f"Dev mode limit reached. Stopping after page {page_count - 1}")
                         break
 
                 # Build API request (convert numeric strings to integers)
                 pagesize = int(self.config.get('target_extraction', 'variable_pagesize'))
                 # Use dynamically extracted cityid from initial URL, fallback to config if not available
-                cityid = self.dynamic_cityid if self.dynamic_cityid else int(self.config.get('target_extraction', 'variable_cityid'))
+                cityid = self.dynamic_cityid if self.dynamic_cityid else int(
+                    self.config.get('target_extraction', 'variable_cityid'))
                 # API uses 1-indexed pages (1, 2, 3...) not 0-indexed
                 api_page = page_num + 1
 
@@ -318,8 +322,10 @@ class WebScraper:
 
                 # Extract response data
                 response_data = response.get('d', [{}])[0] if response.get('d') else {}
-                product_html = response_data.get(self.config.get('target_extraction', 'response_field_listings_html'), '')
-                pagination_html = response_data.get(self.config.get('target_extraction', 'response_field_pagination_html'), '')
+                product_html = response_data.get(self.config.get(
+                    'target_extraction', 'response_field_listings_html'), '')
+                pagination_html = response_data.get(self.config.get(
+                    'target_extraction', 'response_field_pagination_html'), '')
 
                 if not product_html:
                     self.logger.info(f"No listings in page {page_num}")
@@ -332,7 +338,8 @@ class WebScraper:
                 self.logger.info(f"Page {page_num}: {len(items)} items found")
 
                 # Check for next page
-                pagination_extractor = PaginationExtractor(self.config.validated_config['target_extraction'])
+                pagination_extractor = PaginationExtractor(
+                    self.config.validated_config['target_extraction'])
                 next_page_num = pagination_extractor.extract_next_page(pagination_html)
 
                 if next_page_num is None:
@@ -413,18 +420,20 @@ class WebScraper:
             # Write malformed URLs
             malformed_urls = self.item_parser.get_malformed_urls()
             if malformed_urls:
-                with open('malformed_urls.txt', 'w') as f:
+                with open('malformed_urls.txt', 'w', encoding='utf-8') as f:
                     for url in malformed_urls:
                         f.write(url + '\n')
-                self.logger.info(f"Wrote {len(malformed_urls)} malformed URLs to malformed_urls.txt")
+                self.logger.info(
+                    f"Wrote {len(malformed_urls)} malformed URLs to malformed_urls.txt")
 
             # Write malformed emails
             malformed_emails = self.detail_parser.get_malformed_emails()
             if malformed_emails:
-                with open('malformed_emails.txt', 'w') as f:
+                with open('malformed_emails.txt', 'w', encoding='utf-8') as f:
                     for email in malformed_emails:
                         f.write(email + '\n')
-                self.logger.info(f"Wrote {len(malformed_emails)} malformed emails to malformed_emails.txt")
+                self.logger.info(
+                    f"Wrote {len(malformed_emails)} malformed emails to malformed_emails.txt")
 
             self.logger.info("Phase 3 complete: All data exported")
             return True
@@ -445,7 +454,8 @@ class WebScraper:
         self.logger.info("=" * 60)
 
         if self.config.get('development', 'dev_mode'):
-            self.logger.info(f"DEV MODE - Limited to {self.config.get('development', 'dev_mode_max_pages')} pages")
+            self.logger.info(
+                f"DEV MODE - Limited to {self.config.get('development', 'dev_mode_max_pages')} pages")
 
         self.logger.info(f"Total posts found: {len(self.all_posts)}")
         self.logger.info(f"Posts with complete data: {complete_count}")

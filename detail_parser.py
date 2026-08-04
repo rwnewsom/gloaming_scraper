@@ -1,3 +1,4 @@
+"""Parse detail pages to extract user information."""
 import logging
 from typing import Dict, List, Any, Optional
 from bs4 import BeautifulSoup
@@ -52,7 +53,8 @@ class DetailParser:
                 logger.warning(f"Post {post_id}: Could not find body tag")
                 return result
 
-            expected_classes = self.target_config.get('selector_detail_body_class', 'mob version').split()
+            expected_classes = self.target_config.get(
+                'selector_detail_body_class', 'mob version').split()
             body_classes = body.get('class', [])
 
             for expected_class in expected_classes:
@@ -163,7 +165,8 @@ class DetailParser:
             Description text truncated to max length, or None
         """
         try:
-            required_classes = self.target_config.get('selector_description_container_class', '').split()
+            required_classes = self.target_config.get(
+                'selector_description_container_class', '').split()
             if not required_classes:
                 return None
 

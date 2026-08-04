@@ -1,3 +1,4 @@
+"""Data validation utilities."""
 import re
 import logging
 from urllib.parse import urlparse
