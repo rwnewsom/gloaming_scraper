@@ -48,7 +48,8 @@ class APIClient:
         for attempt in range(max_retries + 1):
             try:
                 logger.debug(
-                    f"API POST to {endpoint_path} (attempt {attempt + 1}/{max_retries + 1})")
+                    "API POST to %s (attempt %d/%d)", endpoint_path,
+                    attempt + 1, max_retries + 1)
 
                 response = self.session.post(
                     url,
@@ -62,34 +63,35 @@ class APIClient:
                 try:
                     return response.json()
                 except json.JSONDecodeError as e:
-                    logger.error(f"JSON decode error: {e}")
+                    logger.error("JSON decode error: %s", e)
                     return None
 
             except requests.exceptions.Timeout:
-                logger.warning(f"Timeout on attempt {attempt + 1}")
+                logger.warning("Timeout on attempt %d", attempt + 1)
                 if attempt < max_retries:
                     delay = self._calculate_backoff(attempt, max_delay)
-                    logger.info(f"Retrying in {delay:.1f}s...")
+                    logger.info("Retrying in %.1fs...", delay)
                     time.sleep(delay)
                 continue
 
             except requests.exceptions.ConnectionError as e:
-                logger.warning(f"Connection error: {e}")
+                logger.warning("Connection error: %s", e)
                 if attempt < max_retries:
                     delay = self._calculate_backoff(attempt, max_delay)
-                    logger.info(f"Retrying in {delay:.1f}s...")
+                    logger.info("Retrying in %.1fs...", delay)
                     time.sleep(delay)
                 continue
 
             except requests.exceptions.RequestException as e:
-                logger.error(f"Request failed: {e}")
+                logger.error("Request failed: %s", e)
                 if attempt < max_retries:
                     delay = self._calculate_backoff(attempt, max_delay)
-                    logger.info(f"Retrying in {delay:.1f}s...")
+                    logger.info("Retrying in %.1fs...", delay)
                     time.sleep(delay)
                 continue
 
-        logger.error(f"Failed to POST to {endpoint_path} after {max_retries + 1} attempts")
+        logger.error("Failed to POST to %s after %d attempts", endpoint_path,
+                     max_retries + 1)
         return None
 
     def get_page(self, url: str) -> Optional[str]:
@@ -107,7 +109,8 @@ class APIClient:
 
         for attempt in range(max_retries + 1):
             try:
-                logger.debug(f"GET {url} (attempt {attempt + 1}/{max_retries + 1})")
+                logger.debug("GET %s (attempt %d/%d)", url, attempt + 1,
+                             max_retries + 1)
 
                 response = self.session.get(
                     url,
@@ -118,27 +121,27 @@ class APIClient:
                 return response.text
 
             except requests.exceptions.Timeout:
-                logger.warning(f"Timeout on attempt {attempt + 1}")
+                logger.warning("Timeout on attempt %d", attempt + 1)
                 if attempt < max_retries:
                     delay = self._calculate_backoff(attempt, max_delay)
                     time.sleep(delay)
                 continue
 
             except requests.exceptions.ConnectionError as e:
-                logger.warning(f"Connection error: {e}")
+                logger.warning("Connection error: %s", e)
                 if attempt < max_retries:
                     delay = self._calculate_backoff(attempt, max_delay)
                     time.sleep(delay)
                 continue
 
             except requests.exceptions.RequestException as e:
-                logger.error(f"Request failed: {e}")
+                logger.error("Request failed: %s", e)
                 if attempt < max_retries:
                     delay = self._calculate_backoff(attempt, max_delay)
                     time.sleep(delay)
                 continue
 
-        logger.error(f"Failed to GET {url} after {max_retries + 1} attempts")
+        logger.error("Failed to GET %s after %d attempts", url, max_retries + 1)
         return None
 
     @staticmethod

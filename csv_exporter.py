@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 class CSVExporter:
     """Export scraped data to CSV format"""
 
-    def __init__(self, output_file: str = 'output/scrape_results.csv', config: Dict[str, Any] = None):
+    def __init__(self, output_file: str = 'output/scrape_results.csv',
+                 config: Dict[str, Any] = None):
         """
         Initialize CSV exporter.
 
@@ -49,11 +50,11 @@ class CSVExporter:
                             row[field_name] = post.get(field_name) or ''
                     writer.writerow(row)
 
-            logger.info(f"Exported {len(posts)} posts to {self.output_file}")
+            logger.info("Exported %d posts to %s", len(posts), self.output_file)
             return True
 
-        except Exception as e:
-            logger.error(f"Failed to export CSV: {e}")
+        except OSError as e:
+            logger.error("Failed to export CSV: %s", e)
             return False
 
     def get_output_path(self) -> Path:

@@ -50,7 +50,7 @@ class DetailParser:
             # Verify body class
             body = soup.find('body')
             if not body:
-                logger.warning(f"Post {post_id}: Could not find body tag")
+                logger.warning("Post %s: Could not find body tag", post_id)
                 return result
 
             expected_classes = self.target_config.get(
@@ -59,7 +59,8 @@ class DetailParser:
 
             for expected_class in expected_classes:
                 if expected_class not in body_classes:
-                    logger.warning(f"Post {post_id}: Body class '{expected_class}' not found")
+                    logger.warning("Post %s: Body class '%s' not found", post_id,
+                                   expected_class)
 
             # Find form
             form = soup.find('form', {
@@ -67,7 +68,7 @@ class DetailParser:
             })
 
             if not form:
-                logger.warning(f"Post {post_id}: Could not find form")
+                logger.warning("Post %s: Could not find form", post_id)
                 return result
 
             # Extract input values
@@ -90,13 +91,16 @@ class DetailParser:
                     if EmailValidator.validate(email):
                         result[email_key] = email
                     else:
-                        logger.warning(f"Post {post_id}: Malformed email: {email}")
+                        logger.warning("Post %s: Malformed email: %s", post_id, email)
                         self.malformed_emails.append(email)
                         self.malformed_email_count += 1
 
-                        if self.malformed_email_count > self.config['validation'].get('malformed_email_threshold', 5):
+                        threshold = self.config['validation'].get(
+                            'malformed_email_threshold', 5)
+                        if self.malformed_email_count > threshold:
                             raise RuntimeError(
-                                f"Malformed email threshold exceeded: {self.malformed_email_count}"
+                                "Malformed email threshold exceeded: %d" %
+                                self.malformed_email_count
                             )
                 else:
                     result[email_key] = email
@@ -109,8 +113,8 @@ class DetailParser:
         except RuntimeError:
             raise
 
-        except Exception as e:
-            logger.error(f"Post {post_id}: Error parsing detail page: {e}")
+        except (AttributeError, ValueError) as e:
+            logger.error("Post %s: Error parsing detail page: %s", post_id, e)
 
         return result
 
@@ -135,14 +139,15 @@ class DetailParser:
             })
 
             if not input_field:
-                logger.debug(f"Post {post_id}: Input field '{input_name}' not found")
+                logger.debug("Post %s: Input field '%s' not found", post_id, input_name)
                 return None
 
             value = input_field.get('value', '').strip()
             return value if value else None
 
-        except Exception as e:
-            logger.debug(f"Post {post_id}: Error extracting input '{input_name}': {e}")
+        except (AttributeError, ValueError) as e:
+            logger.debug("Post %s: Error extracting input '%s': %s", post_id,
+                         input_name, e)
             return None
 
     def get_malformed_emails(self) -> List[str]:
@@ -188,6 +193,6 @@ class DetailParser:
             max_length = int(self.target_config.get('selector_description_max_length', 2000))
             return description_text[:max_length]
 
-        except Exception as e:
-            logger.debug(f"Post {post_id}: Error extracting description: {e}")
+        except (AttributeError, ValueError) as e:
+            logger.debug("Post %s: Error extracting description: %s", post_id, e)
             return None

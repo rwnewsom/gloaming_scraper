@@ -4,7 +4,7 @@ import re
 import sys
 import time
 from pathlib import Path
-from typing import Dict, Any
+from typing import Dict
 from bs4 import BeautifulSoup
 
 from redacted.config_manager import ConfigManager
@@ -109,9 +109,9 @@ class WebScraper:
 
         except Exception as e:
             if self.logger:
-                self.logger.error(f"Scraper failed: {e}", exc_info=True)
+                self.logger.error("Scraper failed: %s", e, exc_info=True)
             else:
-                print(f"Scraper failed during initialization: {e}")
+                print("Scraper failed during initialization: %s" % e)
             return False
 
     def _extract_city_name_from_url(self) -> str:
@@ -121,7 +121,7 @@ class WebScraper:
             # Extract city name from URL (e.g., "city-columbus" -> "columbus")
             city_match = re.search(r'city-([a-z]+)', initial_url, re.IGNORECASE)
             return city_match.group(1) if city_match else "unknown"
-        except Exception:
+        except (AttributeError, ValueError):
             return "unknown"
 
     def _extract_cityid_from_initial_url_silent(self) -> int:
@@ -139,8 +139,7 @@ class WebScraper:
 
             if cityid_input and cityid_input.get('value'):
                 return int(cityid_input['value'])
-            else:
-                return int(self.config.get('target_extraction', 'variable_cityid'))
+            return int(self.config.get('target_extraction', 'variable_cityid'))
 
         except Exception:
             return int(self.config.get('target_extraction', 'variable_cityid'))
@@ -149,7 +148,7 @@ class WebScraper:
         """Fetch initial URL and extract cityid (requires logger, called after logging setup)"""
         try:
             initial_url = self.config.get('urls', 'initial_url')
-            self.logger.debug(f"Fetching cityid from {initial_url}")
+            self.logger.debug("Fetching cityid from %s", initial_url)
 
             response = self.api_client.get_page(initial_url)
             if not response:
@@ -163,14 +162,13 @@ class WebScraper:
 
             if cityid_input and cityid_input.get('value'):
                 cityid = int(cityid_input['value'])
-                self.logger.info(f"Extracted cityid: {cityid}")
+                self.logger.info("Extracted cityid: %s", cityid)
                 return cityid
-            else:
-                self.logger.warning("Could not find cityid in initial URL, using configured value")
-                return int(self.config.get('target_extraction', 'variable_cityid'))
+            self.logger.warning("Could not find cityid in initial URL, using configured value")
+            return int(self.config.get('target_extraction', 'variable_cityid'))
 
         except Exception as e:
-            self.logger.error(f"Error extracting cityid: {e}")
+            self.logger.error("Error extracting cityid: %s", e)
             return int(self.config.get('target_extraction', 'variable_cityid'))
 
     def _phase_0_setup(self) -> bool:
@@ -244,9 +242,9 @@ class WebScraper:
 
         except Exception as e:
             if self.logger:
-                self.logger.error(f"Phase 0 failed: {e}")
+                self.logger.error("Phase 0 failed: %s", e)
             else:
-                print(f"Phase 0 failed: {e}")
+                print("Phase 0 failed: %s" % e)
             return False
 
     def _log_robots_txt(self):
@@ -267,7 +265,7 @@ class WebScraper:
                 self.logger.warning("Could not fetch robots.txt")
 
         except Exception as e:
-            self.logger.debug(f"Error fetching robots.txt: {e}")
+            self.logger.debug("Error fetching robots.txt: %s", e)
 
     def _phase_1_list_scraping(self) -> bool:
         """Phase 1: List Scraping (Pagination Loop)"""
@@ -308,7 +306,7 @@ class WebScraper:
                     'Furnishingtype': self.config.get('target_extraction', 'variable_furnishingtype_value'),
                 }
 
-                self.logger.debug(f"API payload: {payload}")
+                self.logger.debug("API payload: %s", payload)
 
                 # Make API request
                 response = self.api_client.post_json(
@@ -317,7 +315,7 @@ class WebScraper:
                 )
 
                 if not response:
-                    self.logger.error(f"Failed to fetch page {page_num}")
+                    self.logger.error("Failed to fetch page %s", page_num)
                     break
 
                 # Extract response data
@@ -328,7 +326,7 @@ class WebScraper:
                     'target_extraction', 'response_field_pagination_html'), '')
 
                 if not product_html:
-                    self.logger.info(f"No listings in page {page_num}")
+                    self.logger.info("No listings in page %s", page_num)
                     break
 
                 # Parse listings
@@ -357,7 +355,7 @@ class WebScraper:
             return True
 
         except Exception as e:
-            self.logger.error(f"Phase 1 failed: {e}")
+            self.logger.error("Phase 1 failed: %s", e)
             return False
 
     def _phase_2_detail_scraping(self) -> bool:
@@ -397,14 +395,14 @@ class WebScraper:
                         time.sleep(delay)
 
                 except Exception as e:
-                    self.logger.error(f"Post {idx}: Error processing detail: {e}")
+                    self.logger.error("Post {idx}: Error processing detail: %s", e)
                     continue
 
             self.logger.info(f"Phase 2 complete: {enriched_count} posts enriched with user data")
             return True
 
         except Exception as e:
-            self.logger.error(f"Phase 2 failed: {e}")
+            self.logger.error("Phase 2 failed: %s", e)
             return False
 
     def _phase_3_export(self) -> bool:
@@ -439,7 +437,7 @@ class WebScraper:
             return True
 
         except Exception as e:
-            self.logger.error(f"Phase 3 failed: {e}")
+            self.logger.error("Phase 3 failed: %s", e)
             return False
 
     def _print_summary(self):
@@ -457,16 +455,16 @@ class WebScraper:
             self.logger.info(
                 f"DEV MODE - Limited to {self.config.get('development', 'dev_mode_max_pages')} pages")
 
-        self.logger.info(f"Total posts found: {len(self.all_posts)}")
-        self.logger.info(f"Posts with complete data: {complete_count}")
-        self.logger.info(f"Posts with partial data: {partial_count}")
-        self.logger.info(f"Malformed URLs: {self.item_parser.get_malformed_url_count()}")
-        self.logger.info(f"Malformed emails: {self.detail_parser.get_malformed_email_count()}")
+        self.logger.info("Total posts found: %s", len(self.all_posts))
+        self.logger.info("Posts with complete data: %s", complete_count)
+        self.logger.info("Posts with partial data: %s", partial_count)
+        self.logger.info("Malformed URLs: %s", self.item_parser.get_malformed_url_count())
+        self.logger.info("Malformed emails: %s", self.detail_parser.get_malformed_email_count())
         self.logger.info(f"Execution time: {elapsed_time:.1f}s")
         self.logger.info("=" * 60)
 
 
 if __name__ == '__main__':
     scraper = WebScraper(config_file='redacted/config.ini')
-    success = scraper.run()
-    sys.exit(0 if success else 1)
+    completed = scraper.run()
+    sys.exit(0 if completed else 1)
