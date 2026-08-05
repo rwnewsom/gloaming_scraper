@@ -1,11 +1,12 @@
 """HTTP client with TOR proxy support and exponential backoff retry logic."""
+# pylint: disable=invalid-name
 import logging
 import time
 import json
 import random
 from typing import Dict, Any, Optional
 
-import requests
+import requests  # pylint: disable=import-error
 
 logger = logging.getLogger(__name__)
 

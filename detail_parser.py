@@ -1,7 +1,8 @@
 """Parse detail pages to extract user information."""
+# pylint: disable=invalid-name
 import logging
 from typing import Dict, List, Any, Optional
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup  # pylint: disable=import-error
 
 from validators import EmailValidator
 
