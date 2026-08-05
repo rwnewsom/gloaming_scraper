@@ -1,8 +1,9 @@
 """TOR proxy management and connection handling."""
 import logging
-import requests
 import socket
 from typing import Optional
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -43,17 +44,21 @@ class TORManager:
             response.raise_for_status()
             self.current_exit_ip = response.json().get('ip')
 
-            logger.info(
-                f"TOR connected to {self.tor_host}:{self.tor_port} (SOCKS{self.socks_version})")
-            logger.info(f"TOR exit IP: {self.current_exit_ip}")
+            logger.info("TOR connected to %s:%d (SOCKS%d)", self.tor_host,
+                        self.tor_port, self.socks_version)
+            logger.info("TOR exit IP: %s", self.current_exit_ip)
 
-        except socket.timeout:
-            raise ConnectionError(f"TOR SOCKS proxy timeout at {self.tor_host}:{self.tor_port}")
-        except ConnectionRefusedError:
+        except socket.timeout as e:
             raise ConnectionError(
-                f"TOR SOCKS proxy connection refused at {self.tor_host}:{self.tor_port}")
-        except Exception as e:
-            raise ConnectionError(f"Failed to verify TOR connection: {e}")
+                "TOR SOCKS proxy timeout at %s:%d" % (self.tor_host, self.tor_port)
+            ) from e
+        except ConnectionRefusedError as e:
+            raise ConnectionError(
+                "TOR SOCKS proxy connection refused at %s:%d" %
+                (self.tor_host, self.tor_port)
+            ) from e
+        except (OSError, requests.RequestException) as e:
+            raise ConnectionError("Failed to verify TOR connection: %s" % e) from e
 
     def get_session(self) -> requests.Session:
         """Get a requests session configured with TOR proxy"""

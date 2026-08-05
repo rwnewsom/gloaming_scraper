@@ -78,10 +78,10 @@ class PaginationExtractor:
                     match = re.search(r'\w+\((\d+),', onclick)
                     if match:
                         page_num = int(match.group(1))
-                        logger.debug(f"Extracted next page number: {page_num}")
+                        logger.debug("Extracted next page number: %s", page_num)
                         return page_num
 
-                    logger.debug(f"Could not extract page number from onclick: {onclick[:100]}")
+                    logger.debug("Could not extract page number from onclick: %s", onclick[:100])
                     return None
 
                 if li == active_li:
@@ -90,8 +90,8 @@ class PaginationExtractor:
             logger.debug("No next page found after active page")
             return None
 
-        except Exception as e:
-            logger.error(f"Error extracting next page: {e}")
+        except (AttributeError, ValueError) as e:
+            logger.error("Error extracting next page: %s", e)
             return None
 
 
@@ -151,13 +151,13 @@ class ItemParser:
                     if item_data:
                         items.append(item_data)
                 except Exception as e:
-                    logger.warning(f"Error parsing item: {e}")
+                    logger.warning("Error parsing item: %s", e)
                     continue
 
         except Exception as e:
-            logger.error(f"Error parsing items HTML: {e}")
+            logger.error("Error parsing items HTML: %s", e)
 
-        logger.info(f"Parsed {len(items)} items")
+        logger.info("Parsed %d items", len(items))
         return items
 
     def _parse_item(self, item) -> Optional[Dict[str, Any]]:
@@ -197,7 +197,7 @@ class ItemParser:
         if not URLValidator.validate(post_url):
             self.malformed_urls.append(post_url)
             self.malformed_url_count += 1
-            logger.warning(f"Malformed URL: {post_url}")
+            logger.warning("Malformed URL: %s", post_url)
 
             if self.malformed_url_count >= self.config['scraping'].get('malformed_url_threshold', 10):
                 raise RuntimeError(
@@ -281,7 +281,7 @@ class ItemParser:
             parsed_date = datetime.strptime(date_text.strip(), '%d/%m/%Y')
             return parsed_date.strftime('%Y-%m-%d')
         except ValueError:
-            logger.debug(f"Failed to parse date: {date_text}")
+            logger.debug("Failed to parse date: %s", date_text)
             return None
 
     def get_malformed_urls(self) -> List[str]:
