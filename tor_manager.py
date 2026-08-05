@@ -90,7 +90,7 @@ class TORManager:
 
             # This is a placeholder for stem library integration
             # Actual implementation would require TOR control port setup
-            logger.warning("TOR identity rotation not yet fully implemented")
+            logger.debug("TOR identity rotation not yet fully implemented")
             return False
 
         except ImportError:

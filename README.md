@@ -21,60 +21,61 @@ privacy-focused implementation.
 
 (Yes, this is slow! Could be sped up in many ways, and the url/email validation isn't strictly necessary)
 
-```2026-08-01 14:58:08,802 - __main__ - INFO - 
+```2026-08-05 14:19:37,864 - __main__ - INFO - 
 [PHASE 0] Setup & Configuration
-2026-08-01 14:58:08,802 - __main__ - INFO - ------------------------------------------------------------
-2026-08-01 14:58:08,802 - redacted.config_manager - INFO - Dev mode: ENABLED
-2026-08-01 14:58:08,802 - redacted.config_manager - INFO - Dev mode max pages: 2
-2026-08-01 14:58:08,802 - redacted.config_manager - INFO - TOR: ENABLED
-2026-08-01 14:58:08,802 - redacted.config_manager - INFO - TOR proxy: 127.0.0.1:9050
-2026-08-01 14:58:08,802 - redacted.config_manager - INFO - TOR identity rotation: DISABLED
-2026-08-01 14:58:08,802 - redacted.config_manager - INFO - Batch size: 5
-2026-08-01 14:58:08,802 - redacted.config_manager - INFO - Request delay: 2.0s
-2026-08-01 14:58:08,802 - redacted.config_manager - INFO - Loaded 40 target selectors from config
-2026-08-01 14:58:08,802 - __main__ - INFO - TOR connection initialized
-2026-08-01 14:58:08,802 - api_client - DEBUG - GET https://www.foobarbaz.com/robots.txt (attempt 1/6)
-2026-08-01 14:58:10,354 - urllib3.connectionpool - DEBUG - https://www.foobarbaz.com:443 "GET /robots.txt HTTP/1.1" 200 24
-2026-08-01 14:58:10,355 - __main__ - INFO - 
+2026-08-05 14:19:37,865 - __main__ - INFO - ------------------------------------------------------------
+2026-08-05 14:19:37,865 - redacted.config_manager - INFO - Dev mode: ENABLED
+2026-08-05 14:19:37,865 - redacted.config_manager - INFO - Dev mode max pages: 2
+2026-08-05 14:19:37,865 - redacted.config_manager - INFO - TOR: ENABLED
+2026-08-05 14:19:37,865 - redacted.config_manager - INFO - TOR proxy: 127.0.0.1:9050
+2026-08-05 14:19:37,865 - redacted.config_manager - INFO - TOR identity rotation: DISABLED
+2026-08-05 14:19:37,865 - redacted.config_manager - INFO - Batch size: 5
+2026-08-05 14:19:37,865 - redacted.config_manager - INFO - Request delay: 2.0s
+2026-08-05 14:19:37,865 - redacted.config_manager - INFO - Loaded 40 target selectors from config
+2026-08-05 14:19:37,865 - __main__ - INFO - TOR connection initialized
+2026-08-05 14:19:38,124 - __main__ - INFO - 
 ============================================================
-2026-08-01 14:58:10,355 - __main__ - INFO - ROBOTS.TXT COMPLIANCE
-2026-08-01 14:58:10,355 - __main__ - INFO - ============================================================
-2026-08-01 14:58:10,355 - __main__ - INFO - User-agent: *
-2026-08-01 14:58:10,355 - __main__ - INFO - Disallow:
-2026-08-01 14:58:10,355 - __main__ - INFO - ============================================================
-2026-08-01 14:58:10,356 - __main__ - INFO - Phase 0 complete: All components initialized
-2026-08-01 14:58:10,356 - __main__ - INFO - ============================================================
-2026-08-01 14:58:10,356 - __main__ - INFO - Web Scraper Started
-2026-08-01 14:58:10,356 - __main__ - INFO - ============================================================
-2026-08-01 14:58:10,356 - __main__ - INFO - 
+2026-08-05 14:19:38,124 - __main__ - INFO - ROBOTS.TXT COMPLIANCE
+2026-08-05 14:19:38,124 - __main__ - INFO - ============================================================
+2026-08-05 14:19:38,125 - __main__ - INFO - User-agent: *
+2026-08-05 14:19:38,125 - __main__ - INFO - Disallow:
+2026-08-05 14:19:38,125 - __main__ - INFO - ============================================================
+2026-08-05 14:19:38,125 - __main__ - INFO - Phase 0 complete: All components initialized
+2026-08-05 14:19:38,125 - __main__ - INFO - ============================================================
+2026-08-05 14:19:38,125 - __main__ - INFO - Web Scraper Started
+2026-08-05 14:19:38,125 - __main__ - INFO - ============================================================
+2026-08-05 14:19:38,125 - __main__ - INFO - 
 [PHASE 1] List Scraping
-2026-08-01 14:58:10,356 - __main__ - INFO - ------------------------------------------------------------
-2026-08-01 14:58:10,356 - <SNIP/>
-2026-08-01 14:58:12,982 - item_parser - DEBUG - No ul container found, parsing <li> elements directly
-2026-08-01 14:58:12,985 - item_parser - INFO - Parsed 10 items
-2026-08-01 14:58:12,985 - __main__ - INFO - Page 0: 10 items found
-2026-08-01 14:58:12,986 - item_parser - DEBUG - Extracted next page number: 2
-795 - __main__ - INFO - Dev mode limit reached. Stopping after page 2
-2026-08-01 14:58:18,796 - __main__ - INFO - Phase 1 complete: 20 total items found
-2026-08-01 14:58:18,796 - __main__ - INFO - 
+2026-08-05 14:19:38,125 - __main__ - INFO - ------------------------------------------------------------
+2026-08-05 14:19:39,201 - item_parser - INFO - Parsed 10 items
+2026-08-05 14:19:39,201 - __main__ - INFO - Page 0: 10 items found
+2026-08-05 14:19:41,872 - item_parser - INFO - Parsed 10 items
+2026-08-05 14:19:41,872 - __main__ - INFO - Page 2: 10 items found
+2026-08-05 14:19:43,878 - __main__ - INFO - Dev mode limit reached. Stopping after page 2
+2026-08-05 14:19:43,878 - __main__ - INFO - Phase 1 complete: 20 total items found
+2026-08-05 14:19:43,878 - __main__ - INFO - 
 [PHASE 2] Detail Scraping
-2026-08-01 14:58:18,796 - __main__ - INFO - ------------------------------------------------------------
-<SNIP/>
-------------------------------------------------------------
-2026-08-01 14:59:41,719 - csv_exporter - INFO - Exported 20 posts to output/scrape_results_FOO_8620_20260801.csv
-2026-08-01 14:59:41,719 - __main__ - INFO - Phase 3 complete: All data exported
-2026-08-01 14:59:41,719 - __main__ - INFO - 
+2026-08-05 14:19:43,878 - __main__ - INFO - ------------------------------------------------------------
+2026-08-05 14:20:07,080 - __main__ - INFO - Processed 10/20 detail pages
+2026-08-05 14:20:31,992 - __main__ - INFO - Processed 20/20 detail pages
+2026-08-05 14:20:33,997 - __main__ - INFO - Phase 2 complete: 20 posts enriched with user data
+2026-08-05 14:20:33,997 - __main__ - INFO - 
+[PHASE 3] Export & Cleanup
+2026-08-05 14:20:33,997 - __main__ - INFO - ------------------------------------------------------------
+2026-08-05 14:20:33,999 - csv_exporter - INFO - Exported 20 posts to output/scrape_results_Chicago_8620_20260805.csv
+2026-08-05 14:20:33,999 - __main__ - INFO - Phase 3 complete: All data exported
+2026-08-05 14:20:33,999 - __main__ - INFO - 
 ============================================================
-2026-08-01 14:59:41,719 - __main__ - INFO - SCRAPING SUMMARY
-2026-08-01 14:59:41,719 - __main__ - INFO - ============================================================
-2026-08-01 14:59:41,719 - __main__ - INFO - DEV MODE - Limited to 2 pages
-2026-08-01 14:59:41,719 - __main__ - INFO - Total posts found: 20
-2026-08-01 14:59:41,719 - __main__ - INFO - Posts with complete data: 20
-2026-08-01 14:59:41,719 - __main__ - INFO - Posts with partial data: 0
-2026-08-01 14:59:41,719 - __main__ - INFO - Malformed URLs: 0
-2026-08-01 14:59:41,719 - __main__ - INFO - Malformed emails: 0
-2026-08-01 14:59:41,719 - __main__ - INFO - Execution time: 103.0s
-2026-08-01 14:59:41,719 - __main__ - INFO - ============================================================
+2026-08-05 14:20:33,999 - __main__ - INFO - SCRAPING SUMMARY
+2026-08-05 14:20:33,999 - __main__ - INFO - ============================================================
+2026-08-05 14:20:33,999 - __main__ - INFO - DEV MODE - Limited to 2 pages
+2026-08-05 14:20:33,999 - __main__ - INFO - Total posts found: 20
+2026-08-05 14:20:34,000 - __main__ - INFO - Posts with complete data: 20
+2026-08-05 14:20:34,000 - __main__ - INFO - Posts with partial data: 0
+2026-08-05 14:20:34,000 - __main__ - INFO - Malformed URLs: 0
+2026-08-05 14:20:34,000 - __main__ - INFO - Malformed emails: 0
+2026-08-05 14:20:34,000 - __main__ - INFO - Execution time: 58.4s
+2026-08-05 14:20:34,000 - __main__ - INFO - ============================================================
 ```
 
 ### Why I made this project (with much appreciation to Claude Code)
