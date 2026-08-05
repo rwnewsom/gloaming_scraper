@@ -1,3 +1,4 @@
+"""TOR proxy management and connection handling."""
 import logging
 import requests
 import socket
@@ -42,13 +43,15 @@ class TORManager:
             response.raise_for_status()
             self.current_exit_ip = response.json().get('ip')
 
-            logger.info(f"TOR connected to {self.tor_host}:{self.tor_port} (SOCKS{self.socks_version})")
+            logger.info(
+                f"TOR connected to {self.tor_host}:{self.tor_port} (SOCKS{self.socks_version})")
             logger.info(f"TOR exit IP: {self.current_exit_ip}")
 
         except socket.timeout:
             raise ConnectionError(f"TOR SOCKS proxy timeout at {self.tor_host}:{self.tor_port}")
         except ConnectionRefusedError:
-            raise ConnectionError(f"TOR SOCKS proxy connection refused at {self.tor_host}:{self.tor_port}")
+            raise ConnectionError(
+                f"TOR SOCKS proxy connection refused at {self.tor_host}:{self.tor_port}")
         except Exception as e:
             raise ConnectionError(f"Failed to verify TOR connection: {e}")
 
