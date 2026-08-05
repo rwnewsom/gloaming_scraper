@@ -1,11 +1,6 @@
 name: Pylint
 
 on:
-  push:
-    paths:
-      - '**/*.py'
-      - '.pylintrc'
-      - 'requirements-dev.txt'
   pull_request:
     paths:
       - '**/*.py'
