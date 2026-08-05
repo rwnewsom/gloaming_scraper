@@ -1,13 +1,14 @@
 """Main orchestrator for web scraping pipeline."""
+# pylint: disable=invalid-name
 import logging
 import re
 import sys
 import time
 from pathlib import Path
 from typing import Dict
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup  # pylint: disable=import-error
 
-from redacted.config_manager import ConfigManager
+from redacted.config_manager import ConfigManager  # pylint: disable=import-error
 from tor_manager import TORManager
 from api_client import APIClient
 from item_parser import ItemParser, PaginationExtractor
