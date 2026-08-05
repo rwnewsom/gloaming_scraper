@@ -1,7 +1,8 @@
 """Parse detail pages to extract user information."""
+# pylint: disable=invalid-name
 import logging
 from typing import Dict, List, Any, Optional
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup  # pylint: disable=import-error
 
 from validators import EmailValidator
 
@@ -50,7 +51,7 @@ class DetailParser:
             # Verify body class
             body = soup.find('body')
             if not body:
-                logger.warning("Post %s: Could not find body tag", post_id)
+                logger.debug("Post %s: Could not find body tag", post_id)
                 return result
 
             expected_classes = self.target_config.get(
@@ -59,8 +60,8 @@ class DetailParser:
 
             for expected_class in expected_classes:
                 if expected_class not in body_classes:
-                    logger.warning("Post %s: Body class '%s' not found", post_id,
-                                   expected_class)
+                    logger.debug("Post %s: Body class '%s' not found", post_id,
+                                 expected_class)
 
             # Find form
             form = soup.find('form', {

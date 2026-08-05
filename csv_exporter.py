@@ -53,7 +53,7 @@ class CSVExporter:
             logger.info("Exported %d posts to %s", len(posts), self.output_file)
             return True
 
-        except OSError as e:
+        except OSError as e:  # pylint: disable=invalid-name
             logger.error("Failed to export CSV: %s", e)
             return False
 
