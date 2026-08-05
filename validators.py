@@ -33,7 +33,7 @@ class URLValidator:
         try:
             result = urlparse(url)
             return all([result.scheme, result.netloc])
-        except Exception:
+        except (AttributeError, ValueError):
             return False
 
     @staticmethod
@@ -49,7 +49,7 @@ class URLValidator:
             base_domain = urlparse(base_url).netloc
             url_domain = urlparse(url).netloc
             return url_domain == base_domain
-        except Exception:
+        except (AttributeError, ValueError):
             return False
 
 
