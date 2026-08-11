@@ -54,3 +54,7 @@ htmlcov/
 
 # Project specific
 .claude/settings.local.json
+
+# Planning documents with configuration examples (local development only)
+docker_local.md
+cloud_plan.md
