@@ -1,5 +1,5 @@
 """Parse detail pages to extract user information."""
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,too-many-locals,too-many-branches
 import logging
 from typing import Dict, List, Any, Optional
 from bs4 import BeautifulSoup  # pylint: disable=import-error
@@ -100,8 +100,8 @@ class DetailParser:
                             'malformed_email_threshold', 5)
                         if self.malformed_email_count > threshold:
                             raise RuntimeError(
-                                "Malformed email threshold exceeded: %d" %
-                                self.malformed_email_count
+                                f"Malformed email threshold exceeded: "
+                                f"{self.malformed_email_count}"
                             )
                 else:
                     result[email_key] = email
@@ -111,11 +111,9 @@ class DetailParser:
             if description:
                 result['description'] = description
 
-        except RuntimeError:
-            raise
-
-        except (AttributeError, ValueError) as e:
-            logger.error("Post %s: Error parsing detail page: %s", post_id, e)
+        except (AttributeError, ValueError) as exc_error:
+            logger.error("Post %s: Error parsing detail page: %s", post_id,
+                        exc_error)
 
         return result
 

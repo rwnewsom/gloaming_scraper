@@ -1,5 +1,5 @@
 """Main orchestrator for web scraping pipeline."""
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,too-many-instance-attributes,too-many-locals
 import logging
 import re
 import sys
@@ -111,7 +111,7 @@ class WebScraper:
             if self.logger:
                 self.logger.error("Scraper failed: %s", exc_error, exc_info=True)
             else:
-                print("Scraper failed during initialization: %s" % e)
+                print(f"Scraper failed during initialization: {exc_error}")
             return False
 
     def _extract_city_name_from_url(self) -> str:
@@ -247,7 +247,7 @@ class WebScraper:
             if self.logger:
                 self.logger.error("Phase 0 failed: %s", exc_error)
             else:
-                print("Phase 0 failed: %s" % e)
+                print(f"Phase 0 failed: {exc_error}")
             return False
 
     def _log_robots_txt(self):
@@ -295,7 +295,7 @@ class WebScraper:
                 pagesize = int(
                     self.config.get('target_extraction', 'variable_pagesize')
                 )
-                # Use dynamically extracted cityid from initial URL, fallback to config if not available
+                # Use dynamically extracted cityid from initial URL, or fallback
                 cityid = self.dynamic_cityid if self.dynamic_cityid else int(
                     self.config.get('target_extraction', 'variable_cityid')
                 )

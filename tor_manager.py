@@ -1,9 +1,10 @@
 """TOR proxy management and connection handling."""
+# pylint: disable=broad-exception-caught
 import logging
 import socket
 from typing import Optional
 
-import requests
+import requests  # pylint: disable=import-error
 
 logger = logging.getLogger(__name__)
 
@@ -48,17 +49,17 @@ class TORManager:
                         self.tor_port, self.socks_version)
             logger.info("TOR exit IP: %s", self.current_exit_ip)
 
-        except socket.timeout as e:
+        except socket.timeout as exc_error:
             raise ConnectionError(
-                "TOR SOCKS proxy timeout at %s:%d" % (self.tor_host, self.tor_port)
-            ) from e
-        except ConnectionRefusedError as e:
+                f"TOR SOCKS proxy timeout at {self.tor_host}:{self.tor_port}"
+            ) from exc_error
+        except ConnectionRefusedError as exc_error:
             raise ConnectionError(
-                "TOR SOCKS proxy connection refused at %s:%d" %
-                (self.tor_host, self.tor_port)
-            ) from e
-        except (OSError, requests.RequestException) as e:
-            raise ConnectionError("Failed to verify TOR connection: %s" % e) from e
+                f"TOR SOCKS proxy connection refused at {self.tor_host}:{self.tor_port}"
+            ) from exc_error
+        except (OSError, requests.RequestException) as exc_error:
+            raise ConnectionError(
+                f"Failed to verify TOR connection: {exc_error}") from exc_error
 
     def get_session(self) -> requests.Session:
         """Get a requests session configured with TOR proxy"""
@@ -82,9 +83,9 @@ class TORManager:
         Returns True if successful, False otherwise.
         """
         try:
-            import stem.process
-            from stem.connection import authenticate
-            from stem.controller import Controller
+            import stem.process  # pylint: disable=import-outside-toplevel,unused-import
+            from stem.connection import authenticate  # pylint: disable=import-outside-toplevel,unused-import
+            from stem.controller import Controller  # pylint: disable=import-outside-toplevel,unused-import
 
             logger.debug("Attempting to rotate TOR identity...")
 
@@ -96,6 +97,6 @@ class TORManager:
         except ImportError:
             logger.debug("stem library not available for identity rotation")
             return False
-        except Exception as e:
-            logger.error(f"Failed to rotate TOR identity: {e}")
+        except Exception as exc_error:
+            logger.error("Failed to rotate TOR identity: %s", exc_error)
             return False

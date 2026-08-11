@@ -1,10 +1,11 @@
 """Parse items from API responses."""
+# pylint: disable=too-many-return-statements,too-few-public-methods,too-many-locals
 import logging
 import re
 from typing import Dict, List, Any, Optional
 from datetime import datetime
-from bs4 import BeautifulSoup
-from bson import ObjectId
+from bs4 import BeautifulSoup  # pylint: disable=import-error
+from bson import ObjectId  # pylint: disable=import-error
 
 from validators import URLValidator
 
@@ -57,15 +58,15 @@ class PaginationExtractor:
 
             # Find next li after active (skip disabled items)
             found_active = False
-            for li in all_li:
+            for pagination_li in all_li:
                 if found_active:
                     # Check if this li is disabled
-                    classes = li.get('class', [])
+                    classes = pagination_li.get('class', [])
                     if 'disabled' in classes:
                         continue
 
                     # Get the link from this li
-                    link = li.find('a')
+                    link = pagination_li.find('a')
                     if not link:
                         continue
 
@@ -81,17 +82,18 @@ class PaginationExtractor:
                         logger.debug("Extracted next page number: %s", page_num)
                         return page_num
 
-                    logger.debug("Could not extract page number from onclick: %s", onclick[:100])
+                    logger.debug("Could not extract page number from onclick: %s",
+                                onclick[:100])
                     return None
 
-                if li == active_li:
+                if pagination_li == active_li:
                     found_active = True
 
             logger.debug("No next page found after active page")
             return None
 
-        except (AttributeError, ValueError) as e:
-            logger.error("Error extracting next page: %s", e)
+        except (AttributeError, ValueError) as exc_error:
+            logger.error("Error extracting next page: %s", exc_error)
             return None
 
 
@@ -133,7 +135,8 @@ class ItemParser:
                 'class': self.target_config.get('selector_listings_ul_class')
             })
 
-            # If no container found, try parsing <li> elements directly (API may return bare list items)
+            # If no container found, try parsing <li> elements directly
+            # (API may return bare list items)
             if items_ul:
                 item_list = items_ul.find_all('li')
             else:
@@ -150,12 +153,12 @@ class ItemParser:
                     item_data = self._parse_item(item)
                     if item_data:
                         items.append(item_data)
-                except Exception as e:
-                    logger.warning("Error parsing item: %s", e)
+                except (AttributeError, ValueError, OSError) as exc_error:
+                    logger.warning("Error parsing item: %s", exc_error)
                     continue
 
-        except Exception as e:
-            logger.error("Error parsing items HTML: %s", e)
+        except (AttributeError, ValueError, OSError) as exc_error:
+            logger.error("Error parsing items HTML: %s", exc_error)
 
         logger.info("Parsed %d items", len(items))
         return items
@@ -199,7 +202,8 @@ class ItemParser:
             self.malformed_url_count += 1
             logger.warning("Malformed URL: %s", post_url)
 
-            if self.malformed_url_count >= self.config['scraping'].get('malformed_url_threshold', 10):
+            threshold = self.config['scraping'].get('malformed_url_threshold', 10)
+            if self.malformed_url_count >= threshold:
                 raise RuntimeError(
                     f"Malformed URL threshold exceeded: {self.malformed_url_count}"
                 )
