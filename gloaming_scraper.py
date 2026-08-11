@@ -111,7 +111,7 @@ class WebScraper:
             if self.logger:
                 self.logger.error("Scraper failed: %s", exc_error, exc_info=True)
             else:
-                print("Scraper failed during initialization: %s" % exc_error)
+                print(f"Scraper failed during initialization: {exc_error}")
             return False
 
     def _extract_city_name_from_url(self) -> str:
@@ -247,7 +247,7 @@ class WebScraper:
             if self.logger:
                 self.logger.error("Phase 0 failed: %s", exc_error)
             else:
-                print("Phase 0 failed: %s" % exc_error)
+                print(f"Phase 0 failed: {exc_error}")
             return False
 
     def _log_robots_txt(self):

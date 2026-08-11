@@ -100,8 +100,8 @@ class DetailParser:
                             'malformed_email_threshold', 5)
                         if self.malformed_email_count > threshold:
                             raise RuntimeError(
-                                "Malformed email threshold exceeded: %d" %
-                                self.malformed_email_count
+                                f"Malformed email threshold exceeded: "
+                                f"{self.malformed_email_count}"
                             )
                 else:
                     result[email_key] = email
@@ -111,8 +111,6 @@ class DetailParser:
             if description:
                 result['description'] = description
 
-        except RuntimeError:
-            raise
         except (AttributeError, ValueError) as exc_error:
             logger.error("Post %s: Error parsing detail page: %s", post_id,
                         exc_error)

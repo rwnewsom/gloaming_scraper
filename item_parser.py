@@ -1,5 +1,5 @@
 """Parse items from API responses."""
-# pylint: disable=too-many-return-statements,too-few-public-methods
+# pylint: disable=too-many-return-statements,too-few-public-methods,too-many-locals
 import logging
 import re
 from typing import Dict, List, Any, Optional
@@ -92,8 +92,8 @@ class PaginationExtractor:
             logger.debug("No next page found after active page")
             return None
 
-        except (AttributeError, ValueError) as e:
-            logger.error("Error extracting next page: %s", e)
+        except (AttributeError, ValueError) as exc_error:
+            logger.error("Error extracting next page: %s", exc_error)
             return None
 
 
