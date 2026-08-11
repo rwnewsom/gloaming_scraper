@@ -1,5 +1,5 @@
 """Tests for csv_exporter module."""
-# pylint: disable=missing-function-docstring,too-many-public-methods
+# pylint: disable=missing-function-docstring,too-many-public-methods,unused-import,redefined-outer-name,invalid-name
 import csv
 from pathlib import Path
 import pytest

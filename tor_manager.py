@@ -1,9 +1,10 @@
 """TOR proxy management and connection handling."""
+# pylint: disable=broad-exception-caught
 import logging
 import socket
 from typing import Optional
 
-import requests
+import requests  # pylint: disable=import-error
 
 logger = logging.getLogger(__name__)
 
@@ -82,9 +83,9 @@ class TORManager:
         Returns True if successful, False otherwise.
         """
         try:
-            import stem.process
-            from stem.connection import authenticate
-            from stem.controller import Controller
+            import stem.process  # pylint: disable=import-outside-toplevel,unused-import
+            from stem.connection import authenticate  # pylint: disable=import-outside-toplevel,unused-import
+            from stem.controller import Controller  # pylint: disable=import-outside-toplevel,unused-import
 
             logger.debug("Attempting to rotate TOR identity...")
 
@@ -96,6 +97,6 @@ class TORManager:
         except ImportError:
             logger.debug("stem library not available for identity rotation")
             return False
-        except Exception as e:
-            logger.error(f"Failed to rotate TOR identity: {e}")
+        except Exception as exc_error:
+            logger.error("Failed to rotate TOR identity: %s", exc_error)
             return False

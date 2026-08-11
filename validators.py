@@ -1,4 +1,5 @@
 """Data validation utilities."""
+# pylint: disable=too-many-return-statements
 import re
 import logging
 from urllib.parse import urlparse
