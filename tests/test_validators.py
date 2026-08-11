@@ -1,4 +1,5 @@
 """Tests for validators module."""
+# pylint: disable=missing-function-docstring,too-many-public-methods,unused-import
 import pytest
 from validators import URLValidator, EmailValidator
 
